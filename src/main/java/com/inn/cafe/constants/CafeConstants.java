@@ -8,6 +8,6 @@ public class CafeConstants {
 
     public static final String UNAUTHORIZED_ACCESS= "unauthorized access.";
 
-    public static final String STORE_LOCATION="";
+    public static final String STORE_LOCATION="/Users/dhaliwal/Downloads/Spring Boot Project";
 
 }
