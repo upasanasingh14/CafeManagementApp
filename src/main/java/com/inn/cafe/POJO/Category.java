@@ -1,4 +1,32 @@
 package com.inn.cafe.POJO;
 
-public class Category {
+
+import lombok.Data;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
+
+import javax.persistence.*;
+import java.io.Serializable;
+
+@NamedQuery(name="Category.getAllCategory", query= "select c from Category c")
+
+@Data
+@Entity
+@DynamicUpdate
+@DynamicInsert
+@Table(name = "category")
+
+public class Category implements Serializable {
+
+    private static final long serialVersionUID=1l;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name= "id")
+    private Integer Id;
+
+    @Column(name="name")
+    private String name;
+
+
 }
