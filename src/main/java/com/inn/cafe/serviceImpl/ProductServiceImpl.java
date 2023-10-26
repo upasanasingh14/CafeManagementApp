@@ -123,6 +123,80 @@ public class ProductServiceImpl implements ProductService {
         return CafeUtils.getResponseEntity(CafeConstants.SOMETHING_WENT_WRONG,HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    @Override
+    public ResponseEntity<String> deleteProduct(Integer id) {
+        try{
+            if(jwtFilter.isAdmin())
+            {
+              Optional optional= productDao.findById(id);
+              if(!optional.isEmpty())
+              {
+                    productDao.deleteById(id);
+                    return CafeUtils.getResponseEntity("Product Deleted Successfully",HttpStatus.OK);
+              }
+              return CafeUtils.getResponseEntity("Product id doesn't exist",HttpStatus.OK);
+
+            }
+            else
+            {
+                return CafeUtils.getResponseEntity(CafeConstants.UNAUTHORIZED_ACCESS, HttpStatus.UNAUTHORIZED);
+            }
+        }
+        catch (Exception ex)
+        {
+            ex.printStackTrace();
+        }
+        return CafeUtils.getResponseEntity(CafeConstants.SOMETHING_WENT_WRONG,HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @Override
+    public ResponseEntity<String> updateStatus(Map<String, String> requestMap) {
+        try{
+            if(jwtFilter.isAdmin())
+            {
+                Optional optional=productDao.findById(Integer.parseInt(requestMap.get("id")));
+                if(!optional.isEmpty())
+                {
+                    productDao.updateProductStatus(requestMap.get("status"),Integer.parseInt(requestMap.get("id")));
+                    return CafeUtils.getResponseEntity("Product Status Updated Successfully",HttpStatus.OK);
+
+                }
+                return CafeUtils.getResponseEntity("Product id doesn't exist",HttpStatus.OK);
+
+            }
+            else
+            {
+                    return CafeUtils.getResponseEntity(CafeConstants.UNAUTHORIZED_ACCESS,HttpStatus.UNAUTHORIZED);
+            }
+
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
+        return CafeUtils.getResponseEntity(CafeConstants.SOMETHING_WENT_WRONG,HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @Override
+    public ResponseEntity<List<ProductWrapper>> getByCategory(Integer id) {
+        try{
+            return new ResponseEntity<>(productDao.getProductByCategory(id),HttpStatus.OK);
+
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
+        return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @Override
+    public ResponseEntity<ProductWrapper> getProductById(Integer id) {
+        try{
+            return new ResponseEntity<>(productDao.getProductById(id),HttpStatus.OK);
+
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
+        return new ResponseEntity<>(new ProductWrapper(),HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
 
 }
 
