@@ -222,7 +222,6 @@ public class BillServiceImpl implements BillService {
         }
         return null;
     }
-
     private byte[] getByteArray(String filePath) throws Exception {
         File initialFile= new File(filePath);
         InputStream targetStream= new FileInputStream(initialFile);
@@ -230,5 +229,25 @@ public class BillServiceImpl implements BillService {
         targetStream.close();
         return byteArray;
     }
+
+
+    @Override
+    public ResponseEntity<String> deleteBill(Integer id) {
+        try{
+            Optional optional= billDao.findById(id);
+            if(!optional.isEmpty())
+            {
+                billDao.deleteById(id);
+                return CafeUtils.getResponseEntity("Bill deleted Successfully", HttpStatus.OK);
+            }
+            return CafeUtils.getResponseEntity("Bill id doesn't exist",HttpStatus.OK);
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
+        return CafeUtils.getResponseEntity(CafeConstants.SOMETHING_WENT_WRONG,HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+
+
 
 }
